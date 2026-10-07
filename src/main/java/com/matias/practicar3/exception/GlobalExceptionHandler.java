@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //Atrapamos la excepcion especifica
+    //Atrapamos la excepcion específica
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity argumentoInvalido(IllegalArgumentException ex){
+    public ResponseEntity<MensajeError> argumentoInvalido(IllegalArgumentException ex){
 
         //Obtenemos el mensaje enviado
         MensajeError errorBody = new MensajeError(

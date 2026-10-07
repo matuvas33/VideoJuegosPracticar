@@ -5,21 +5,22 @@ import com.matias.practicar3.dto.videojuego.VideojuegoResponse;
 import com.matias.practicar3.model.Videojuego;
 import com.matias.practicar3.repository.VideojuegoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class VideojuegoService {
     private final VideojuegoRepository videojuegoRepository;
 
-    public List<VideojuegoResponse> obtenerJuegos(){
-        List<Videojuego> listaJuegos = videojuegoRepository.findAll();
+    public Page<VideojuegoResponse> obtenerVideojuegos(Pageable pageable){
 
-        return listaJuegos.stream()
-                .map(this::mapearDTO)
-                .toList();
+        Page<Videojuego> paginaEntidades = videojuegoRepository.findAll(pageable);
+
+        return paginaEntidades.map(this::mapearDTO);
+
     }
 
     public VideojuegoResponse obtenerJuegoId(Long id){
@@ -42,7 +43,7 @@ public class VideojuegoService {
 
     public VideojuegoResponse actualizarVideojuego(Long id,VideojuegoRequired juego){
         Videojuego juegoEncontrado = videojuegoRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("No se ha encontrado juego con ID" +id));
+                .orElseThrow(()->new IllegalArgumentException("No se ha encontrado juego con ID " +id));
         juegoEncontrado.setTitulo(juego.titulo());
         juegoEncontrado.setPlataforma(juego.plataforma());
         juegoEncontrado.setEstado(juego.estado());
@@ -54,7 +55,7 @@ public class VideojuegoService {
 
     public void borrarJuego(Long id){
         Videojuego juegoEncontrado = videojuegoRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("No se ha encontrado juego con ID" +id));
+                .orElseThrow(()->new IllegalArgumentException("No se ha encontrado juego con ID " +id));
         videojuegoRepository.delete(juegoEncontrado);
     }
 
